@@ -1,0 +1,84 @@
+{% set version = '1.5-1' %}
+
+{% set posix = 'm2-' if win else '' %}
+{% set native = 'm2w64-' if win else '' %}
+
+package:
+  name: r-gridsvg
+  version: {{ version|replace("-", "_") }}
+
+source:
+  fn: gridSVG_{{ version }}.tar.gz
+  url:
+    - https://cran.r-project.org/src/contrib/gridSVG_{{ version }}.tar.gz
+    - https://cran.r-project.org/src/contrib/Archive/gridSVG/gridSVG_{{ version }}.tar.gz
+
+
+  sha256: 78ae6271e1cd5b8c5ef1d555fbe69c1fd0d3d26006db341c39cf8c3e91ad878e
+  # patches:
+   # List any patch files here
+   # - fix.patch
+
+build:
+  # If this is a new build for the same version, increment the build number.
+  number: 0
+
+  # This is required to make R link correctly on Linux.
+  rpaths:
+    - lib/R/lib/
+    - lib/
+
+# Suggests: lattice
+requirements:
+  build:
+    - r-base
+    - r-xml
+    - r-jsonlite
+
+  run:
+    - r-base
+    - r-xml
+    - r-jsonlite
+
+test:
+  commands:
+    # You can put additional test commands to be run here.
+    - $R -e "library('gridSVG')"  # [not win]
+    - "\"%R%\" -e \"library('gridSVG')\""  # [win]
+
+  # You can also put a file called run_test.py, run_test.sh, or run_test.bat
+  # in the recipe that will be run at test time.
+
+  # requires:
+    # Put any additional test requirements here.
+
+about:
+  home: https://CRAN.R-project.org/package=gridSVG
+  license: GPL
+  summary: Functions to export graphics drawn with package grid to SVG format.  Additional functions
+    provide access to SVG features that are not available in standard R graphics, such
+    as hyperlinks,  animation, filters, masks, clipping paths, and gradient and pattern
+    fills.
+  license_family: GPL
+
+# The original CRAN metadata for this package was:
+
+# Package: gridSVG
+# Title: Export 'grid' Graphics as SVG
+# Version: 1.5-1
+# Authors@R: c(person("Paul", "Murrell", role = c("cre", "aut"), email = "paul@stat.auckland.ac.nz"), person("Simon", "Potter", role = "aut", email = "simon@sjp.co.nz"))
+# Description: Functions to export graphics drawn with package grid to SVG format.  Additional functions provide access to SVG features that are not available in standard R graphics, such as hyperlinks,  animation, filters, masks, clipping paths, and gradient and pattern fills.
+# Depends: R (>= 3.1)
+# Imports: grDevices, graphics, utils, methods, grid, jsonlite, XML
+# Suggests: lattice
+# License: GPL
+# NeedsCompilation: no
+# Packaged: 2017-05-04 00:29:42 UTC; pmur002
+# Author: Paul Murrell [cre, aut], Simon Potter [aut]
+# Maintainer: Paul Murrell <paul@stat.auckland.ac.nz>
+# Repository: CRAN
+# Date/Publication: 2017-05-04 07:22:43 UTC
+
+# See
+# http://docs.continuum.io/conda/build.html for
+# more information about meta.yaml
