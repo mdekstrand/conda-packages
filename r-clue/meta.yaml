@@ -1,0 +1,86 @@
+{% set version = '0.3-54' %}
+
+{% set posix = 'm2-' if win else '' %}
+{% set native = 'm2w64-' if win else '' %}
+
+package:
+  name: r-clue
+  version: {{ version|replace("-", "_") }}
+
+source:
+  fn: clue_{{ version }}.tar.gz
+  url:
+    - https://cran.r-project.org/src/contrib/clue_{{ version }}.tar.gz
+    - https://cran.r-project.org/src/contrib/Archive/clue/clue_{{ version }}.tar.gz
+
+
+  sha256: 4e91b3313cd320b0e028aa732e2ad2e8dd64bebf34cfa2f220c2a107220fd4ba
+  # patches:
+   # List any patch files here
+   # - fix.patch
+
+build:
+  # If this is a new build for the same version, increment the build number.
+  number: 0
+
+  # This is required to make R link correctly on Linux.
+  rpaths:
+    - lib/R/lib/
+    - lib/
+
+# Suggests: e1071, lpSolve (>= 5.5.7), quadprog (>= 1.4-8), relations
+requirements:
+  build:
+    - r-base
+    - r-cluster
+    - posix                # [win]
+    - {{native}}toolchain  # [win]
+    - gcc                  # [not win]
+
+  run:
+    - r-base
+    - r-cluster
+    - {{native}}gcc-libs   # [win]
+    - libgcc               # [not win]
+
+test:
+  commands:
+    # You can put additional test commands to be run here.
+    - $R -e "library('clue')"  # [not win]
+    - "\"%R%\" -e \"library('clue')\""  # [win]
+
+  # You can also put a file called run_test.py, run_test.sh, or run_test.bat
+  # in the recipe that will be run at test time.
+
+  # requires:
+    # Put any additional test requirements here.
+
+about:
+  home: https://CRAN.R-project.org/package=clue
+  license: GPL-2
+  summary: CLUster Ensembles.
+  license_family: GPL2
+
+# The original CRAN metadata for this package was:
+
+# Package: clue
+# Version: 0.3-54
+# Encoding: UTF-8
+# Title: Cluster Ensembles
+# Description: CLUster Ensembles.
+# Authors@R: c(person("Kurt", "Hornik", role = c("aut", "cre"), email = "Kurt.Hornik@R-project.org"), person("Walter", "Bhm", role = "ctb"))
+# License: GPL-2
+# Depends: R (>= 3.2.0)
+# Imports: stats, cluster, graphics, methods
+# Suggests: e1071, lpSolve (>= 5.5.7), quadprog (>= 1.4-8), relations
+# Enhances: RWeka, ape, cba, cclust, flexclust, flexmix, kernlab, mclust, movMF, modeltools
+# NeedsCompilation: yes
+# Packaged: 2017-08-07 13:07:01 UTC; hornik
+# Author: Kurt Hornik [aut, cre], Walter Bhm [ctb]
+# Maintainer: Kurt Hornik <Kurt.Hornik@R-project.org>
+# Repository: CRAN
+# Date/Publication: 2017-08-09 05:29:36 UTC
+
+# See
+# http://docs.continuum.io/conda/build.html for
+# more information about meta.yaml
