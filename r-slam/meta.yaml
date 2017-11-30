@@ -34,12 +34,11 @@ requirements:
     - r-base
     - posix                # [win]
     - {{native}}toolchain  # [win]
-    - gcc                  # [not win]
+    - {{compiler('c')}}                  # [not win]
 
   run:
     - r-base
     - {{native}}gcc-libs   # [win]
-    - libgcc               # [not win]
 
 test:
   commands:

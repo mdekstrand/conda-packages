@@ -35,13 +35,12 @@ requirements:
     - r-cluster
     - posix                # [win]
     - {{native}}toolchain  # [win]
-    - gcc                  # [not win]
+    - {{compiler('c')}}                  # [not win]
 
   run:
     - r-base
     - r-cluster
     - {{native}}gcc-libs   # [win]
-    - libgcc               # [not win]
 
 test:
   commands:

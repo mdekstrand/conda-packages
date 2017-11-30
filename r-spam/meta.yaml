@@ -35,13 +35,13 @@ requirements:
     - r-dotcall64
     - posix                # [win]
     - {{native}}toolchain  # [win]
-    - gcc                  # [not win]
+    - {{compiler('c')}}                  # [not win]
+    - {{compiler('fortran')}} # [not win]
 
   run:
     - r-base
     - r-dotcall64
     - {{native}}gcc-libs   # [win]
-    - libgcc               # [not win]
 
 test:
   commands:
