@@ -12,16 +12,18 @@ source:
   url:
     - https://cran.r-project.org/src/contrib/RPostgreSQL_{{ version }}.tar.gz
     - https://cran.r-project.org/src/contrib/Archive/RPostgreSQL/RPostgreSQL_{{ version }}.tar.gz
-
-
   sha256: 080118647208bfa2621bcaac0d324891cc513e07618fa22e3c50ec2050e1b0d5
+
+
   # patches:
    # List any patch files here
    # - fix.patch
 
 build:
+  merge_build_host: True  # [win]
   # If this is a new build for the same version, increment the build number.
   number: 0
+
 
   # This is required to make R link correctly on Linux.
   rpaths:
@@ -31,22 +33,32 @@ build:
 
 requirements:
   build:
+    - {{ compiler('c') }}        # [not win]
+    - {{native}}toolchain        # [win]
+    - {{posix}}filesystem        # [win]
+    - {{posix}}sed               # [win]
+    - {{posix}}grep              # [win]
+    - {{posix}}autoconf
+    - {{posix}}automake-wrapper  # [win]
+    - {{posix}}automake          # [not win]
+    - {{posix}}pkg-config
+    - {{posix}}make
+    - libpq
+
+  host:
     - r-base
     - r-dbi >=0.3
-    - posix                # [win]
-    - {{native}}toolchain  # [win]
-    - {{compiler('c')}}    # [not win]
-    - postgresql ==9.5.4
 
   run:
     - r-base
+    - {{native}}gcc-libs         # [win]
     - r-dbi >=0.3
-    - {{native}}gcc-libs   # [win]
+    - libpq
 
 test:
   commands:
     # You can put additional test commands to be run here.
-    - $R -e "library('RPostgreSQL')"  # [not win]
+    - $R -e "library('RPostgreSQL')"           # [not win]
     - "\"%R%\" -e \"library('RPostgreSQL')\""  # [win]
 
   # You can also put a file called run_test.py, run_test.sh, or run_test.bat
@@ -66,6 +78,8 @@ about:
     Linux distributions. On 'macOS' and 'Microsoft Windows' system the attached 'libpq'
     library source will be used.
   license_family: GPL2
+
+
 
 # The original CRAN metadata for this package was:
 
