@@ -46,11 +46,11 @@ requirements:
     - libpq
 
   host:
-    - r-base
+    - {{r_impl}}
     - r-dbi >=0.3
 
   run:
-    - r-base
+    - {{r_impl}}
     - {{native}}gcc-libs         # [win]
     - r-dbi >=0.3
     - libpq
