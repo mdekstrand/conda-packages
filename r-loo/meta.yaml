@@ -30,12 +30,12 @@ build:
 
 # Suggests: knitr, rmarkdown, rstan, rstanarm, testthat
 requirements:
-  build:
-    - r-base
+  host:
+    - {{r_impl}}
     - r-matrixstats >=0.50.0
 
   run:
-    - r-base
+    - {{r_impl}}
     - r-matrixstats >=0.50.0
 
 test:

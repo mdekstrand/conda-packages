@@ -31,15 +31,17 @@ build:
 # Suggests: base64enc, ggplot2, knitr, microbenchmark, R.devices, R.rsp
 requirements:
   build:
-    - r-base
     - {{ compiler('c') }}        # [not win]
     - {{native}}toolchain        # [win]
     - {{posix}}filesystem        # [win]
     - {{posix}}coreutils         # [win]
     - {{posix}}make
 
+  host:
+    - {{r_impl}}
+
   run:
-    - r-base
+    - {{r_impl}}
     - {{native}}gcc-libs         # [win]
 
 test:
