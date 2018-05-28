@@ -48,6 +48,7 @@ requirements:
   host:
     - {{r_impl}}
     - r-dbi >=0.3
+    - libpq
 
   run:
     - {{r_impl}}
