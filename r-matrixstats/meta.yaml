@@ -2,18 +2,24 @@
 
 {% set posix = 'm2-' if win else '' %}
 {% set native = 'm2w64-' if win else '' %}
+{% set mro = r_impl == 'mro-base' %}
+{% set source_build = not win64 or not mro %}
 
 package:
   name: r-matrixstats
   version: {{ version|replace("-", "_") }}
 
 source:
+{% if source_build %}
   fn: matrixStats_{{ version }}.tar.gz
   url:
-    - https://cran.r-project.org/src/contrib/matrixStats_{{ version }}.tar.gz
-    - https://cran.r-project.org/src/contrib/Archive/matrixStats/matrixStats_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/matrixStats_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/Archive/matrixStats/matrixStats_{{ version }}.tar.gz
   sha256: 39da6aa6b109f89a141dab8913d981abc4fbd3f8be9e206f92e382cc5270d2a5
-
+{% else %}
+  url: {{cran_mirror}}/bin/windows/contrib/3.4/matrixStats_{{ version }}.zip
+  sha256: edf2f72078d68d581792431ad5b2e0dd6b2da768e9f7c4291d299fafdab9921c
+{% endif %}
 
   # patches:
    # List any patch files here
@@ -31,18 +37,23 @@ build:
 # Suggests: base64enc, ggplot2, knitr, microbenchmark, R.devices, R.rsp
 requirements:
   build:
+  {% if source_build %}
     - {{ compiler('c') }}        # [not win]
     - {{native}}toolchain        # [win]
     - {{posix}}filesystem        # [win]
     - {{posix}}coreutils         # [win]
     - {{posix}}make
+    - {{r_impl}}                 # [win]
+  {% endif %}
 
+  {% if mro or not win %}
   host:
     - {{r_impl}}
+  {% endif %}
 
   run:
     - {{r_impl}}
-    - {{native}}gcc-libs         # [win]
+    - {{native}}gcc-libs         # [win and source_build]
 
 test:
   commands:
