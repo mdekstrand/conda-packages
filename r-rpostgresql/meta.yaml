@@ -2,18 +2,21 @@
 
 {% set posix = 'm2-' if win else '' %}
 {% set native = 'm2w64-' if win else '' %}
+{% set source_build = not win64 or r_impl != 'mro-base' %}
 
 package:
   name: r-rpostgresql
   version: {{ version|replace("-", "_") }}
 
 source:
+{% if source_build %}
   fn: RPostgreSQL_{{ version }}.tar.gz
-  url:
-    - https://cran.r-project.org/src/contrib/RPostgreSQL_{{ version }}.tar.gz
-    - https://cran.r-project.org/src/contrib/Archive/RPostgreSQL/RPostgreSQL_{{ version }}.tar.gz
+  url: {{cran_mirror}}/src/contrib/RPostgreSQL_{{ version }}.tar.gz
   sha256: 080118647208bfa2621bcaac0d324891cc513e07618fa22e3c50ec2050e1b0d5
-
+{% else %}
+  url: {{ cran_mirror }}/bin/windows/contrib/3.4/RPostgreSQL_{{ version }}.zip
+  sha256: bf26134b2d02c4d994a23414bbea751075f6db9dfb18aa4eb59e30a5dff3d41a
+{% endif %}
 
   # patches:
    # List any patch files here
@@ -33,6 +36,7 @@ build:
 
 requirements:
   build:
+  {% if source_build %}
     - {{ compiler('c') }}        # [not win]
     - {{native}}toolchain        # [win]
     - {{posix}}filesystem        # [win]
@@ -44,17 +48,22 @@ requirements:
     - {{posix}}pkg-config
     - {{posix}}make
     - libpq
+  {% endif %}
 
   host:
     - {{r_impl}}
     - r-dbi >=0.3
+  {% if source_build %}
     - libpq
+  {% endif %}
 
   run:
     - {{r_impl}}
     - {{native}}gcc-libs         # [win]
     - r-dbi >=0.3
+  {% if source_build %}
     - libpq
+  {% endif %}
 
 test:
   commands:

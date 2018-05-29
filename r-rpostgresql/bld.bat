@@ -1,8 +1,9 @@
+if "%r_impl%" == "mro-base" goto copy_binary
 "%R%" CMD INSTALL --build .
 IF %ERRORLEVEL% NEQ 0 exit 1
-
-@rem Add more build steps here, if they are necessary.
-
-@rem See
-@rem http://docs.continuum.io/conda/build.html
-@rem for a list of environment variables that are set during the build process.
+exit 0
+:copy_binary
+mkdir %PREFIX%\lib\R\library
+robocopy /E . "%PREFIX%\lib\R\library\RPostgreSQL"
+IF %ERRORLEVEL% NEQ 1 exit 1
+exit 0
