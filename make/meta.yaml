@@ -1,0 +1,10 @@
+package:
+  name: make
+  version: 1
+
+build:
+  number: 0
+
+requirements:
+  run:
+  - m2-make
