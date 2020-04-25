@@ -1,11 +1,7 @@
-cargo build --release
-if errorlevel 1 exit 1
+cargo install --locked --root "%PREFIX%" --path . || goto :error
+del /F /Q "%PREFIX%\.crates.toml"
+goto :EOF
 
-mkdir %PREFIX%\Scripts
-if errorlevel 1 exit 1
-
-copy build\target\recto.exe %PREFIX%\Scripts
-if errorlevel 1 exit 1
-
-copy build\target\verso.exe %PREFIX%\Scripts
-if errorlevel 1 exit 1
+:error
+echo Failed with error #%errorlevel%.
+exit 1
