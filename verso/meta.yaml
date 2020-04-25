@@ -1,0 +1,21 @@
+{% set version = '0.1.0' %}
+
+package:
+  name: verso
+  version: {{ version }}
+
+source:
+  git_url: https://github.com/nickpascucci/verso.git
+  git_rev: v{{ version }}
+
+requirements:
+  build:
+  - rust
+
+
+about:
+  home: https://github.com/nickpascucci/verso
+  license: GPLv3
+  summary: >
+    A new approach to literate programming.
+  license_family: GPL
